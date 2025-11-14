@@ -2,6 +2,7 @@
   "name": "project-updtaes",
   "version": "1.0.0",
   "scripts": {
-    "generate-manifests": "node scripts/generate-screenshot-manifests.js"
+    "generate-manifests": "node scripts/generate-screenshot-manifests.js",
+    "generate-posts": "node scripts/generate-posts-index.js"
   }
 }

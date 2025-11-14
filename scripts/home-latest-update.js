@@ -17,11 +17,11 @@
     const card = document.createElement('article');
     card.className = 'update-card';
 
-  const heading = document.createElement('h3');
-  const titleWrap = document.createElement('span');
-  titleWrap.className = 'post-title';
-  titleWrap.textContent = update.title || 'Update';
-  heading.appendChild(titleWrap);
+    const heading = document.createElement('h3');
+    const titleWrap = document.createElement('span');
+    titleWrap.className = 'post-title';
+    titleWrap.textContent = update.title || 'Update';
+    heading.appendChild(titleWrap);
 
     const meta = document.createElement('p');
     meta.style.fontSize = '0.8rem';
@@ -57,12 +57,11 @@
     return card;
   }
 
-  function renderLatest(container) {
+  function renderLatest(container, updates) {
     container.innerHTML = '';
-    const updates = loadUpdates();
     if (!updates.length) {
       const p = document.createElement('p');
-      p.textContent = 'No updates yet. Create one in the Admin page.';
+      p.textContent = 'No updates yet. Posts will appear here once added to the posts/ folder.';
       p.style.color = 'var(--color-text-subtle)';
       container.appendChild(p);
       return;
@@ -82,15 +81,42 @@
     container.appendChild(card);
   }
 
-  function init() {
+  async function fetchPublishedPosts() {
+    try {
+      const res = await fetch('../posts/index.json');
+      if (!res.ok) return [];
+      return await res.json();
+    } catch (e) {
+      console.error('Failed to load published posts', e);
+      return [];
+    }
+  }
+
+  async function init() {
     const container = document.getElementById('home-latest-update');
     if (!container) return;
-    renderLatest(container);
+    
+    // Load local drafts
+    let updates = loadUpdates();
+    
+    // Fetch and merge published posts from repo
+    const published = await fetchPublishedPosts();
+    if (published && published.length) {
+      const known = new Set(updates.map(u => u.id));
+      published.forEach(post => {
+        if (!known.has(post.id)) {
+          updates.push(post);
+        }
+      });
+    }
+    
+    renderLatest(container, updates);
 
     // Listen for updates from other tabs
     window.addEventListener('storage', function(e) {
       if (e.key === STORAGE_KEY) {
-        renderLatest(container);
+        const updates = loadUpdates();
+        renderLatest(container, updates);
       }
     });
   }

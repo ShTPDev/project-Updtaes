@@ -10,7 +10,7 @@
   *   createdAt: string (ISO),
   *   displayDate: string,
   *   displayTime: string,
-  *   imageUrls?: string[] // array of data URLs or remote URLs
+  *   imageUrls?: string[] // array of data URLs
   * }
    */
 
@@ -33,6 +33,21 @@
       console.error('Failed to save admin updates', e);
     }
   }
+
+  // Download a post as a JSON file
+  function downloadPostAsJSON(post) {
+    const blob = new Blob([JSON.stringify(post, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `post-${post.id}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  let UPDATES = [];
+
+
 
   function renderUpdates(container, updates) {
     container.innerHTML = '';
@@ -86,22 +101,39 @@
           card.appendChild(imgsContainer);
         }
 
-        // Delete button (admin only)
+        card.appendChild(body);
+
+        // Action buttons container
+        const btnContainer = document.createElement('div');
+        btnContainer.style.display = 'flex';
+        btnContainer.style.gap = '0.5rem';
+        btnContainer.style.marginTop = '0.5rem';
+
+        // Download JSON button
+        const downloadBtn = document.createElement('button');
+        downloadBtn.type = 'button';
+        downloadBtn.textContent = 'Download JSON';
+        downloadBtn.style.background = '#3b82f6';
+        downloadBtn.addEventListener('click', function() {
+          downloadPostAsJSON(update);
+        });
+        btnContainer.appendChild(downloadBtn);
+
+        // Delete button
         const deleteBtn = document.createElement('button');
         deleteBtn.type = 'button';
-        deleteBtn.textContent = 'Delete post';
+        deleteBtn.textContent = 'Delete';
         deleteBtn.style.background = '#ef4444';
-        deleteBtn.style.marginTop = '0.5rem';
         deleteBtn.addEventListener('click', function() {
           const ok = confirm('Delete this post? This action cannot be undone.');
           if (!ok) return;
-          updates = updates.filter(u => u.id !== update.id);
-          saveUpdates(updates);
-          renderUpdates(feed, updates);
+          UPDATES = UPDATES.filter(u => u.id !== update.id);
+          saveUpdates(UPDATES);
+          renderUpdates(container, UPDATES);
         });
-        card.appendChild(deleteBtn);
+        btnContainer.appendChild(deleteBtn);
 
-        card.appendChild(body);
+        card.appendChild(btnContainer);
         container.appendChild(card);
       });
   }
@@ -113,11 +145,11 @@
 
     if (!form || !feed) return;
 
-    let updates = loadUpdates();
-    renderUpdates(feed, updates);
+    UPDATES = loadUpdates();
+    renderUpdates(feed, UPDATES);
 
-  // file upload preview handling (support multiple)
-  let filePreviewDataUrls = [];
+    // file upload preview handling (support multiple)
+    let filePreviewDataUrls = [];
     const fileInput = document.getElementById('update-image-file');
     const previewContainer = document.getElementById('update-image-preview');
     const previewImg = document.getElementById('update-image-preview-img');
@@ -146,7 +178,7 @@
           const dataUrl = await readFileAsDataUrl(file);
           const approxBytes = Math.round((dataUrl.length * 3) / 4);
           if (approxBytes > 2_000_000) {
-            const keep = confirm(`Image \"${file.name}\" is larger than ~2MB. Storing large images in localStorage can fill space or be slow. Continue?`);
+            const keep = confirm(`Image "${file.name}" is larger than ~2MB. Large images can fill localStorage or be slow. Continue?`);
             if (!keep) continue;
           }
 
@@ -197,28 +229,25 @@
       });
     }
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
       e.preventDefault();
 
       const title = document.getElementById('update-title').value.trim();
       const body = document.getElementById('update-body').value.trim();
-  // use local machine time for timestamp (user requested current time)
-  const imageUrl = document.getElementById('update-image-url').value.trim();
-  // prefer file images if present; allow typed URL as a fallback or additional image
-  const finalImageUrls = (filePreviewDataUrls && filePreviewDataUrls.length) ? filePreviewDataUrls.slice() : [];
-  if (imageUrl) finalImageUrls.push(imageUrl);
+      const imageUrl = document.getElementById('update-image-url').value.trim();
+      
+      const finalImageUrls = filePreviewDataUrls.length ? filePreviewDataUrls.slice() : [];
+      if (imageUrl) finalImageUrls.push(imageUrl);
 
       if (!title || !body) {
         alert('Title and notes are required.');
         return;
       }
 
-  const now = new Date();
-  // format local date YYYY-MM-DD
-  const pad = (n) => (n < 10 ? '0' + n : '' + n);
-  const displayDate = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-  // format time HH:MM in local timezone
-  const displayTime = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+      const now = new Date();
+      const pad = (n) => (n < 10 ? '0' + n : '' + n);
+      const displayDate = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+      const displayTime = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
 
       const update = {
         id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -230,23 +259,43 @@
         imageUrls: finalImageUrls
       };
 
-      updates.push(update);
-      saveUpdates(updates);
-      renderUpdates(feed, updates);
+      // Save locally
+      UPDATES.push(update);
+      saveUpdates(UPDATES);
+      renderUpdates(feed, UPDATES);
 
-      form.reset();
-      filePreviewDataUrl = null;
+      // Auto-download the JSON file for the user to commit
+      downloadPostAsJSON(update);
+
+      // Show instruction hint
+      const hint = document.createElement('div');
+      hint.style.padding = '1rem';
+      hint.style.background = '#dbeafe';
+      hint.style.borderRadius = '6px';
+      hint.style.marginTop = '1rem';
+      hint.innerHTML = `
+        <strong>Post created!</strong><br>
+        1. Save the downloaded JSON file to <code>posts/</code> folder<br>
+        2. Run: <code>node scripts/generate-posts-index.js</code><br>
+        3. Commit and push to GitHub
+      `;
+      form.insertAdjacentElement('afterend', hint);
+      setTimeout(() => hint.remove(), 10000);
+
       if (previewContainer) previewContainer.style.display = 'none';
-      if (previewImg) previewImg.src = '';
+      form.reset();
+      filePreviewDataUrls = [];
     });
+
+    
 
     if (clearBtn) {
       clearBtn.addEventListener('click', function() {
         const confirmClear = confirm('Clear all stored updates in this browser? This cannot be undone.');
         if (!confirmClear) return;
-        updates = [];
-        saveUpdates(updates);
-        renderUpdates(feed, updates);
+  UPDATES = [];
+  saveUpdates(UPDATES);
+  renderUpdates(feed, UPDATES);
       });
     }
   }

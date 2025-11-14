@@ -1,0 +1,8 @@
+{
+  "provider": "supabase",
+  "supabaseUrl": "https://cnabpjgcughsdjfopcug.supabase.co",
+  "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuYWJwamdjdWdoc2RqZm9wY3VnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxNTE2ODEsImV4cCI6MjA3ODcyNzY4MX0.3byGjzk12CoG71xx6BlzJRL4VAsyGmyaPtq5CClDSBo",
+  "table": "posts",
+    "storageBucket": "postimages", 
+    "functionsBaseUrl": "https://cnabpjgcughsdjfopcug.functions.supabase.co"
+}

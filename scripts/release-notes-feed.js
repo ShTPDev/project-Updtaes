@@ -1,4 +1,4 @@
-(function() {
+ (function() {
   const STORAGE_KEY = 'm3m3-admin-updates-v1';
 
   function loadUpdates() {
@@ -15,10 +15,9 @@
 
   function renderReleaseUpdates(container, updates) {
     container.innerHTML = '';
-
     if (!updates.length) {
       const hint = document.createElement('p');
-      hint.textContent = 'Admin updates you post on the Admin page will appear here in this browser.';
+      hint.textContent = 'No updates yet. Posts will appear here once added to the posts/ folder.';
       hint.style.color = '#6b7280';
       hint.style.fontSize = '0.9rem';
       container.appendChild(hint);
@@ -27,16 +26,16 @@
 
     updates
       .slice()
-      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)) // newest first
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
       .forEach(update => {
         const card = document.createElement('article');
         card.className = 'version-block';
 
-  const heading = document.createElement('h3');
-  const titleWrap = document.createElement('span');
-  titleWrap.className = 'post-title';
-  titleWrap.textContent = update.title || 'Update';
-  heading.appendChild(titleWrap);
+        const heading = document.createElement('h3');
+        const titleWrap = document.createElement('span');
+        titleWrap.className = 'post-title';
+        titleWrap.textContent = update.title || 'Update';
+        heading.appendChild(titleWrap);
 
         const meta = document.createElement('p');
         meta.style.fontSize = '0.8rem';
@@ -60,28 +59,49 @@
             img.alt = update.title || 'Update image';
             img.style.maxWidth = '100%';
             img.style.maxHeight = '480px';
-            img.style.objectFit = 'contain';
             img.style.borderRadius = '6px';
-            img.style.marginTop = '0.5rem';
             imgsContainer.appendChild(img);
           });
           card.appendChild(imgsContainer);
         }
 
         card.appendChild(body);
-
         container.appendChild(card);
       });
   }
 
-  function init() {
+  async function fetchPublishedPosts() {
+    try {
+      const res = await fetch('../posts/index.json');
+      if (!res.ok) return [];
+      return await res.json();
+    } catch (e) {
+      console.error('Failed to load published posts', e);
+      return [];
+    }
+  }
+
+  async function init() {
     const container = document.getElementById('dynamic-release-updates');
     if (!container) return;
-
-    const updates = loadUpdates();
+    
+    // Load local drafts
+    let updates = loadUpdates();
+    
+    // Fetch and merge published posts from repo
+    const published = await fetchPublishedPosts();
+    if (published && published.length) {
+      const known = new Set(updates.map(u => u.id));
+      published.forEach(post => {
+        if (!known.has(post.id)) {
+          updates.push(post);
+        }
+      });
+    }
+    
     renderReleaseUpdates(container, updates);
 
-    // Respond to changes made by the Admin page in another tab
+    // Listen for local storage changes
     window.addEventListener('storage', function(e) {
       if (e.key === STORAGE_KEY) {
         const updates = loadUpdates();
