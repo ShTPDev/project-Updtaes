@@ -1,6 +1,32 @@
 
 # project-updates/
 
+A static website for publishing project updates, release notes, and screenshots. Fully self-contained with no external database dependencies—all posts are stored as JSON files in the repository.
+
+## Quick Start
+
+### Publishing Posts
+
+1. **Create a post** via the Admin page (`pages/admin_updates.html`)
+   - Fill in title, body, and optionally add images
+   - Click Submit → a JSON file will auto-download
+
+2. **Save the JSON file** to the `posts/` folder
+
+3. **Generate the index**:
+   ```powershell
+   npm run generate-posts
+   ```
+
+4. **Commit and push**:
+   ```powershell
+   git add posts/
+   git commit -m "Add new post"
+   git push
+   ```
+
+5. **Done!** GitHub Pages will automatically deploy your changes.
+
 ## Publishing with GitHub Pages
 
 - Check out the repository
@@ -58,6 +84,37 @@ Notes:
   The script writes `list.json` into each screenshots folder.
   - The generator includes only these file types for the manifest: `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`, `.svg`. It excludes `list.json` itself so the manifest won't be rendered by the loader.
 
+## Posts System
+
+### Overview
+Posts are stored as individual JSON files in the `posts/` folder. The site loads posts from `posts/index.json`, which is generated from all individual post files.
+
+### Workflow
+1. **Create** - Use the Admin page to create a post (downloads a JSON file)
+2. **Save** - Move the downloaded file to `posts/` folder
+3. **Generate** - Run `npm run generate-posts` to update the index
+4. **Deploy** - Commit and push to GitHub
+
+### Post Format
+Each post is a JSON file with this structure:
+```json
+{
+  "id": "unique-id",
+  "title": "Post Title",
+  "body": "Post content...",
+  "createdAt": "2025-11-14T12:00:00.000Z",
+  "displayDate": "2025-11-14",
+  "displayTime": "12:00",
+  "imageUrls": ["data:image/png;base64,..."]
+}
+```
+
+Images are stored as base64 data URLs within the JSON file, making posts completely self-contained.
+
+### Scripts
+- `npm run generate-posts` - Regenerate `posts/index.json` from individual post files
+- `npm run generate-manifests` - Regenerate screenshot manifests
+
   ## Serving locally
 
   Most browsers block fetch() from file:// pages. To test the dynamic loader you should serve the site from a simple local HTTP server. Examples (PowerShell):
@@ -81,12 +138,14 @@ Notes:
     - The theme toggle was updated from a button to an accessible slider checkbox — see `scripts/theme-toggle.js`.
 
   - Admin updates and release notes
-    - Admin UI for posting updates: `pages/admin_updates.html` and `scripts/admin-updates.js` store updates in localStorage.
-    - Admin posts include: title, body, a generated timestamp (local time), and optionally multiple images per post (data URLs or remote URLs).
-    - Posts are persisted under the key `m3m3-admin-updates-v1`.
+    - Admin UI for posting updates: `pages/admin_updates.html` and `scripts/admin-updates.js`.
+    - Posts are stored as JSON files in the `posts/` folder. Each post is downloaded after creation and committed to the repository.
+    - Admin posts include: title, body, a generated timestamp (local time), and optionally multiple images per post (stored as base64 data URLs).
+    - Posts are also cached in localStorage under the key `m3m3-admin-updates-v1` for quick local access.
     - Admin authentication is handled by a light client-side gate using `config/auth-config.json` and `scripts/admin-auth.js`; the auth flag is stored at `m3m3-admin-auth`.
-    - Release notes page (`pages/release_notes_page.html`) loads the same admin posts via `scripts/release-notes-feed.js` and shows newest-first.
-  - Home (`pages/index.html`) shows the latest admin post with `scripts/home-latest-update.js`.
+    - Release notes page (`pages/release_notes_page.html`) loads posts from `posts/index.json` via `scripts/release-notes-feed.js` and shows newest-first.
+    - Home (`pages/index.html`) shows the latest post with `scripts/home-latest-update.js`.
+    - Use `npm run generate-posts` to regenerate `posts/index.json` after adding new post files.
 
   - Screenshots loader and lightbox viewer
     - The screenshots page now dynamically loads images per section from manifests located at `assets/screenshots/<folder>/list.json`.
@@ -101,7 +160,7 @@ Notes:
 
   ## Repository notes and cleanup
 
+  - The site is now completely self-contained with no external database dependencies. All posts are stored as JSON files in the `posts/` folder.
   - The `pages/project_update_webpage.html` page was removed from the main navigation and replaced with a 'page removed' message then redirected to Home. The site now uses the Release Notes and Admin pages for update publishing.
   - Demo images used for screenshots are placed in `assets/screenshots/frontend` and `assets/screenshots/backend`.
-
-  If you'd like, I can add a small README section for image captions or wire the screenshot manifest generator into an `npm` script (e.g. `npm run generate-manifests`). Which would you prefer?
+  - Previous Supabase integration has been removed. Posts are now managed entirely through static JSON files in the repository.
