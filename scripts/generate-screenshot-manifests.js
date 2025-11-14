@@ -15,7 +15,17 @@ folders.forEach(folder => {
     console.warn('Directory not found:', dir);
     return;
   }
-  const files = fs.readdirSync(dir).filter(f => !f.startsWith('.') && fs.statSync(path.join(dir, f)).isFile());
+  // Only include common image types (skip list.json and any non-images)
+  const allowedExts = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg'];
+  const files = fs.readdirSync(dir).filter(f => {
+    if (f.startsWith('.')) return false;
+    const stat = fs.statSync(path.join(dir, f));
+    if (!stat.isFile()) return false;
+    const ext = path.extname(f).toLowerCase();
+    // skip the manifest file if present
+    if (f.toLowerCase() === 'list.json') return false;
+    return allowedExts.includes(ext);
+  });
   const manifestPath = path.join(dir, 'list.json');
   fs.writeFileSync(manifestPath, JSON.stringify(files, null, 2));
   console.log('Wrote manifest:', manifestPath, '(', files.length, 'files)');

@@ -28,7 +28,14 @@ Notes:
   node scripts/generate-screenshot-manifests.js
   ```
 
+  Or with npm (convenience script):
+
+  ```powershell
+  npm run generate-manifests
+  ```
+
   The script writes `list.json` into each screenshots folder.
+  - The generator includes only these file types for the manifest: `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`, `.svg`. It excludes `list.json` itself so the manifest won't be rendered by the loader.
 
   ## Serving locally
 

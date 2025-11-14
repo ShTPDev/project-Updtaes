@@ -39,23 +39,30 @@
     const frontendContainer = document.querySelector('#frontend .screenshot-placeholder');
     const backendContainer = document.querySelector('#admin-panel .screenshot-placeholder');
 
-    if (frontendContainer) {
+  if (frontendContainer) {
       const dir = frontendContainer.parentElement?.dataset?.dir || 'frontend';
       const manifest = `../assets/screenshots/${dir}/list.json`;
       const base = `../assets/screenshots/${dir}`;
       tryLoadList(manifest)
-        .then(images => renderGrid(frontendContainer, images, base))
+        .then(images => {
+          // Filter out anything that isn't an image and ignore manifest file names
+          const allowed = images.filter(name => /\.(png|jpe?g|gif|webp|svg)$/i.test(name));
+          renderGrid(frontendContainer, allowed, base);
+        })
         .catch(() => { // fallback: keep placeholders
           frontendContainer.innerHTML = '<p>No screenshot manifest found for ' + dir + '.</p>';
         });
     }
 
-    if (backendContainer) {
+  if (backendContainer) {
       const dir = backendContainer.parentElement?.dataset?.dir || 'backend';
       const manifest = `../assets/screenshots/${dir}/list.json`;
       const base = `../assets/screenshots/${dir}`;
       tryLoadList(manifest)
-        .then(images => renderGrid(backendContainer, images, base))
+        .then(images => {
+          const allowed = images.filter(name => /\.(png|jpe?g|gif|webp|svg)$/i.test(name));
+          renderGrid(backendContainer, allowed, base);
+        })
         .catch(() => {
           backendContainer.innerHTML = '<p>No screenshot manifest found for ' + dir + '.</p>';
         });
