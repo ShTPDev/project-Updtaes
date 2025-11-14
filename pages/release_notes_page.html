@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M3M3 Development – Release Notes</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <header>
+    <div style="display:flex;align-items:center;">
+      <img src="../assets/logo/black-white.svg" alt="Company Logo" class="logo" />
+      <h1>M3M3 Development – Release Notes</h1>
+    </div>
+    <nav style="margin-top:1rem;display:flex;align-items:center;gap:1rem;">
+      <div>
+  <a href="index.html">Home</a>
+        <span> | </span>
+        <a href="release_notes_page.html">Release Notes</a>
+        <span> | </span>
+    <a href="screenshots_page.html">Screenshots</a>
+    <span> | </span>
+		<a href="admin_updates.html">Admin</a>
+      </div>
+      <label class="theme-switch" style="margin-left:auto;" title="Toggle theme">
+        <input type="checkbox" class="theme-toggle-checkbox" aria-label="Toggle theme" />
+        <span class="theme-slider" role="switch" aria-checked="false"></span>
+      </label>
+    </nav>
+  </header>
+
+  <main class="release-page">
+    <div class="full-width-release">
+      <h2>Release Notes</h2>
+      <p>This page contains admin posts and versioned summaries — newest first. The feed below is the full-page list for easy browsing.</p>
+
+      <div class="release-feed-wrapper">
+        <div id="dynamic-release-updates" class="release-list"></div>
+      </div>
+    </div>
+
+    
+  </main>
+  <script src="../scripts/release-notes-feed.js"></script>
+  <script src="../scripts/theme-toggle.js"></script>
+</body>
+</html>

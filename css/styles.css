@@ -1,0 +1,515 @@
+/* Global Stylesheet for M3M3 Development Project Pages */
+
+:root {
+  /* Light theme */
+  --color-bg: rgb(246, 246, 246);
+  --color-surface: #ffffff;
+  --color-header-footer: rgb(36, 36, 36);
+  --color-hero: rgb(39, 43, 33);
+  --color-text-main: #111827;
+  --color-text-subtle: #6b7280;
+  --color-accent: #f87171;
+  --color-pill-bg: #fee2e2;
+  --color-pill-text: #b91c1c;
+}
+
+body.theme-dark {
+  /* Dark theme overrides using same palette family */
+  --color-bg: rgb(24, 24, 24);
+  --color-surface: rgb(36, 36, 36);
+  --color-header-footer: rgb(0, 0, 0);
+  --color-hero: rgb(39, 43, 33);
+  --color-text-main: #f9fafb;
+  --color-text-subtle: #9ca3af;
+  --color-accent: #f87171;
+  --color-pill-bg: rgba(248, 113, 113, 0.12);
+  --color-pill-text: #fecaca;
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+  line-height: 1.6;
+}
+
+/* Header */
+header {
+  background-color: var(--color-header-footer);
+  color: #fff;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 1.6rem;
+}
+
+.logo {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  background-color: transparent; /* image has its own color */
+  border-radius: 8px;
+  margin-right: 1rem;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a {
+  color: var(--color-accent); /* accent */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Main Container */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem 3rem;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.6fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.hero-title {
+  font-size: 2.1rem;
+  color: var(--color-text-main);
+}
+
+.hero-subtitle {
+  margin-top: 0.75rem;
+  color: var(--color-text-subtle);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: var(--color-pill-bg);
+  color: var(--color-pill-text);
+  border: 1px solid rgba(248, 113, 113, 0.5);
+}
+
+.pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #22c55e;
+  margin-right: 0.4rem;
+}
+
+.hero-card {
+  background: var(--color-hero); /* dark olive */
+  color: #f9fafb; /* ensure white text in hero card for both themes */
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.6);
+}
+
+.hero-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.hero-metadata span strong {
+  color: #e5e7eb;
+}
+
+h2 {
+  border-left: 4px solid #dc2626; /* red accent */
+  padding-left: 0.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-main);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.section-header p {
+  font-size: 0.9rem;
+  color: var(--color-text-subtle);
+}
+
+h3 {
+  color: var(--color-text-main);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+.update-card p,
+.version-block p,
+.screenshot-card p {
+  white-space: pre-wrap; /* preserve newlines, wrap long words */
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Ensure admin form text wraps properly and input fields don't overflow */
+#admin-update-form textarea {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  width: 100%;
+}
+
+#admin-update-form input[type='text'] {
+  width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
+/* Cards */
+.update-card, .version-block, .screenshot-card {
+  background-color: var(--color-surface);
+  padding: 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+  overflow-x: hidden; /* prevent horizontal overflow from long words or images */
+}
+
+.update-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Admin feed: show updates vertically */
+#admin-updates-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Release List - scrollable container for release notes */
+.release-list {
+  /* Let the release list grow vertically; page will scroll naturally */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-right: 0; /* no internal scrollbar */
+}
+
+/* full width release page adjustments */
+.release-page {
+  width: 100%;
+}
+
+.full-width-release {
+  width: 100%;
+  padding: 1.5rem 2rem;
+  box-sizing: border-box;
+}
+
+.release-feed-wrapper {
+  max-width: 1400px; /* limit content width inside full page */
+  margin: 0 auto;
+}
+
+.release-list .version-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.update-card h3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; /* allow title to wrap to the next line */
+}
+
+.update-card h3 .post-title,
+.version-block h3 .post-title {
+  flex: 1 1 60%;
+  min-width: 0; /* allow shrinking */
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.badge {
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--color-pill-bg);
+  color: var(--color-pill-text);
+}
+
+/* Responsive layout tweaks */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .container {
+    margin: 1.5rem auto;
+    padding: 0 1.25rem;
+  }
+
+  .update-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.screenshot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.screenshot-card img {
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* show whole image */
+  border-radius: 6px;
+  background-color: #ccc;
+}
+
+/* Lightbox overlay */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 95vw;
+  max-height: 95vh;
+  width: 90vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lightbox-img {
+  max-width: 100%;
+  max-height: 80vh;
+  width: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+}
+
+.lightbox-caption {
+  color: #fff;
+  opacity: 0.9;
+  font-size: 0.9rem;
+  text-align: center;
+  max-width: 90vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lightbox-close {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+
+.lightbox-nav {
+  position: absolute;
+  background: rgba(0,0,0,0.4);
+  color: #fff;
+  border: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-nav.left { left: 8px; }
+.lightbox-nav.right { right: 8px; }
+
+.lightbox-nav:hover, .lightbox-close:hover { background: rgba(0,0,0,0.6); }
+
+.screenshot-placeholder {
+  padding: 1rem;
+  border-radius: 8px;
+  background: var(--color-surface);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.screenshot-card {
+  background: var(--color-surface);
+  padding: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+/* Ensure image previews in cards don't overflow the layout */
+.update-card img,
+.version-block img {
+  max-width: 100%;
+  max-height: 480px; /* allow taller previews to fit */
+  object-fit: contain; /* prevent cropping, show whole image */
+  border-radius: 6px;
+  display: block;
+  margin: 0.75rem auto;
+}
+
+/* Footer */
+footer {
+  background-color: var(--color-header-footer);
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+/* Buttons */
+button {
+  background-color: #2563eb; /* blue */
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+button:hover {
+  background-color: #1e40af;
+}
+
+/* Theme switch (slider) */
+.theme-switch {
+  display: inline-block;
+  width: 56px;
+  height: 30px;
+  position: relative;
+  margin-left: auto; /* place to the right in nav */
+}
+
+.theme-switch input {
+  display: none;
+}
+
+.theme-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--color-surface);
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.08);
+  transition: background 220ms ease, border-color 220ms ease;
+}
+
+.theme-slider::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 22px;
+  height: 22px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12);
+  transition: transform 220ms cubic-bezier(.2,.9,.4,1);
+}
+
+.theme-switch input:checked + .theme-slider {
+  background: var(--color-accent);
+  border-color: rgba(0,0,0,0.06);
+}
+
+.theme-switch input:checked + .theme-slider::before {
+  transform: translateX(26px);
+}
+
+/* Slightly show a small sun/moon icon states with CSS using pseudo-elements */
+.theme-slider::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  opacity: 0.6;
+}
+
+.theme-switch input:not(:checked) + .theme-slider::after {
+  left: 8px;
+  right: auto;
+  background: rgba(0,0,0,0.1);
+}

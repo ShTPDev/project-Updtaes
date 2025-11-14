@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Updates – M3M3 Development</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <header>
+    <div style="display:flex;align-items:center;">
+      <img src="../assets/logo/black-white.svg" alt="Company Logo" class="logo" />
+      <h1>M3M3 Development – Admin Updates</h1>
+    </div>
+    <nav style="display:flex;align-items:center;gap:1rem;">
+      <div>
+  <a href="index.html">Home</a>
+        <span> | </span>
+        <a href="release_notes_page.html">Release Notes</a>
+        <span> | </span>
+  <a href="screenshots_page.html">Screenshots</a>
+  <span> | </span>
+        <a href="admin_updates.html">Admin</a>
+      </div>
+      <label class="theme-switch" style="margin-left:auto;" title="Toggle theme">
+        <input type="checkbox" class="theme-toggle-checkbox" aria-label="Toggle theme" />
+        <span class="theme-slider" role="switch" aria-checked="false"></span>
+      </label>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="section-header">
+      <h2>Post a new update</h2>
+      <p>Only visible in this browser. Use it to track what you ship and when.</p>
+    </section>
+
+    <section class="update-card">
+      <form id="admin-update-form">
+        <div style="margin-bottom:1rem;">
+          <label for="update-title"><strong>Title</strong></label><br />
+          <input id="update-title" name="title" type="text" required style="width:100%;padding:0.5rem;margin-top:0.25rem;border-radius:6px;border:1px solid #d1d5db;" />
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label for="update-body"><strong>Notes / Description</strong></label><br />
+          <textarea id="update-body" name="body" rows="4" required style="width:100%;padding:0.5rem;margin-top:0.25rem;border-radius:6px;border:1px solid #d1d5db;"></textarea>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <p style="font-size:0.9rem;color:#6b7280;margin-top:0.25rem;"><strong>Timestamp:</strong> will be set automatically to your current local time when you save.</p>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label for="update-image-url"><strong>Image URL (optional)</strong></label><br />
+          <input id="update-image-url" name="imageUrl" type="url" placeholder="https://..." style="width:100%;padding:0.5rem;margin-top:0.25rem;border-radius:6px;border:1px solid #d1d5db;" />
+          <p style="font-size:0.8rem;color:#6b7280;margin-top:0.25rem;">Use an image hosted in /assets/screenshots/ or another URL.</p>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label for="update-image-file"><strong>Upload image(s) (from your computer)</strong></label><br />
+          <input id="update-image-file" name="imageFile" type="file" accept="image/*" multiple style="margin-top:0.25rem;" />
+          <p style="font-size:0.8rem;color:#6b7280;margin-top:0.25rem;">Select an image from your machine. It will be stored locally in this browser and displayed with the update.</p>
+          <div id="update-image-preview" style="margin-top:0.5rem;display:none;">
+            <div id="update-image-preview-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.5rem;align-items:start;"></div>
+            <div style="margin-top:0.5rem;">
+              <button type="button" id="clear-image-btn" style="background:#ef4444;">Remove all images</button>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit">Save update</button>
+        <button type="button" id="clear-updates-btn" style="background-color:#6b7280;margin-left:0.5rem;">Clear all (this browser)</button>
+      </form>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <h2>Update timeline</h2>
+        <p>Newest updates first. Stored locally in this browser.</p>
+      </div>
+      <div id="admin-updates-feed" class="update-grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Admin-only helper. Data is stored in this browser's local storage.</p>
+  </footer>
+
+  <script src="../scripts/theme-toggle.js"></script>
+  <script src="../scripts/admin-auth.js"></script>
+  <script src="../scripts/admin-updates.js"></script>
+</body>
+</html>

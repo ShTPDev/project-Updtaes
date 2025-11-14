@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Future Updates - M3M3 Development</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <header>
+    <div style="display:flex;align-items:center;">
+      <img src="../assets/logo/black-white.svg" alt="Company Logo" class="logo" />
+      <h1>M3M3 Development</h1>
+    </div>
+    <nav>
+      <ul>
+  <li><a href="index.html">Home</a></li>
+        <li>|</li>
+        <li><a href="release_notes_page.html">Release Notes</a></li>
+        <li>|</li>
+        <li><a href="screenshots_page.html">Screenshots</a></li>
+  <li>|</li>
+        <li><a href="admin_updates.html">Admin</a></li>
+      </ul>
+      <label class="theme-switch" style="margin-left:1rem;" title="Toggle theme">
+        <input type="checkbox" class="theme-toggle-checkbox" aria-label="Toggle theme" />
+        <span class="theme-slider" role="switch" aria-checked="false"></span>
+      </label>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <span class="pill"><span class="pill-dot"></span> Live project status</span>
+  <h2 class="hero-title">Future updates for your M3M3 project</h2>
+  <p class="hero-subtitle">A simple, always-current overview of what we're delivering next across UX, admin tooling, security, and multi-client support.</p>
+      </div>
+      <div class="hero-card">
+  <p><strong>Snapshot</strong></p>
+  <p>We're actively iterating on the experience, tightening performance, and expanding the template so it can be reused for new clients with minimal setup.</p>
+        <div class="hero-metadata">
+          <span><strong>Current focus:</strong> UI polish & admin tools</span>
+          <span><strong>Next release:</strong> v1.1</span>
+          <span><strong>Owner:</strong> M3M3 Development</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">
+  <h2>Upcoming features</h2>
+  <p>High-level roadmap of what's landing soon.</p>
+      </div>
+      <div class="update-grid">
+        <article class="update-card">
+          <h3>
+            <span>✨ Version 0.123 &mdash; UI enhancements</span>
+            <span class="badge">In-progress</span>
+          </h3>
+          <p>Improved layout, smoother micro-interactions, refreshed icons, and a more consistent responsive experience across devices.</p>
+        </article>
+
+        <article class="update-card">
+          <h3>
+            <span>📦 Admin panel upgrade</span>
+            <span class="badge">Planned</span>
+          </h3>
+          <p>New analytics dashboard, clearer role management, and faster load times for large data sets in the admin UI.</p>
+        </article>
+
+        <article class="update-card">
+          <h3>
+            <span>🔐 Security enhancements</span>
+            <span class="badge">Planned</span>
+          </h3>
+          <p>2FA support, hardened session rules, and updated encryption policies to keep the platform aligned with modern security practices.</p>
+        </article>
+
+        <article class="update-card">
+          <h3>
+            <span>🌍 Multi-client template expansion</span>
+            <span class="badge">Exploring</span>
+          </h3>
+          <p>Reusable, configurable templates so new client instances can be set up quickly with their own branding and content.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <h2>Latest update</h2>
+        <p>Most recent admin post (newest first).</p>
+      </div>
+      <div id="home-latest-update" class="update-grid"></div>
+    </section>
+  </main>
+  <script src="../scripts/theme-toggle.js"></script>
+  <script src="../scripts/home-latest-update.js"></script>
+</body>
+</html>
