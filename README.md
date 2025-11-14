@@ -58,7 +58,7 @@ Notes:
     - Posts are persisted under the key `m3m3-admin-updates-v1`.
     - Admin authentication is handled by a light client-side gate using `config/auth-config.json` and `scripts/admin-auth.js`; the auth flag is stored at `m3m3-admin-auth`.
     - Release notes page (`pages/release_notes_page.html`) loads the same admin posts via `scripts/release-notes-feed.js` and shows newest-first.
-    - Home (`pages/future_updates.html`) shows the latest admin post with `scripts/home-latest-update.js`.
+  - Home (`pages/index.html`) shows the latest admin post with `scripts/home-latest-update.js`.
 
   - Screenshots loader and lightbox viewer
     - The screenshots page now dynamically loads images per section from manifests located at `assets/screenshots/<folder>/list.json`.
