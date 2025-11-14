@@ -71,14 +71,25 @@
   }
 
   async function fetchPublishedPosts() {
-    try {
-      const res = await fetch('../posts/index.json');
-      if (!res.ok) return [];
-      return await res.json();
-    } catch (e) {
-      console.error('Failed to load published posts', e);
-      return [];
+    // Try a few likely relative paths so the same script works from
+    // both the repo root and the `pages/` folder.
+    const candidates = [
+      'posts/index.json',
+      '../posts/index.json',
+      '/posts/index.json',
+    ];
+
+    for (const p of candidates) {
+      try {
+        const res = await fetch(p);
+        if (res && res.ok) return await res.json();
+      } catch (e) {
+        // ignore and try next candidate
+      }
     }
+
+    console.error('Failed to load published posts from any known path');
+    return [];
   }
 
   async function init() {
