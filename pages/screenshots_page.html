@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M3M3 Development – Screenshots</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <header>
+    <div style="display:flex;align-items:center;">
+  <img src="../assets/logo/black-white.svg" alt="Company Logo" class="logo" />
+      <h1>M3M3 Development – Screenshots</h1>
+    </div>
+    <nav style="margin-top:1rem;display:flex;align-items:center;gap:1rem;">
+      <div>
+        <a href="future_updates.html">Home</a>
+        <span> | </span>
+        <a href="release_notes_page.html">Release Notes</a>
+        <span> | </span>
+  <a href="screenshots_page.html">Screenshots</a>
+  <span> | </span>
+        <a href="admin_updates.html">Admin</a>
+      </div>
+      <label class="theme-switch" style="margin-left:auto;" title="Toggle theme">
+        <input type="checkbox" class="theme-toggle-checkbox" aria-label="Toggle theme" />
+        <span class="theme-slider" role="switch" aria-checked="false"></span>
+      </label>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section>
+      <h2>Screenshots Overview</h2>
+      <p>This page contains organized screenshot groups for both the user-facing mobile frontend and the Admin Web panel. Replace the placeholder boxes with actual image URLs or GitHub-hosted assets.</p>
+    </section>
+
+  <section class="screenshot-section" id="frontend" data-dir="frontend">
+      <h3>Frontend (Mobile App)</h3>
+      <p>Upload UI screenshots here for the mobile experience: Home, Ads, Product Details, Cart, Real-time updates, Animations, etc.</p>
+      <div class="screenshot-placeholder">
+        <p>Loading images from <code>/assets/screenshots/frontend</code> ...</p>
+      </div>
+    </section>
+
+  <section class="screenshot-section" id="admin-panel" data-dir="backend">
+      <h3>Admin Panel (Web)</h3>
+      <p>Add screenshots for the Admin Web panel: Tag updates, item management, Sale/New/Hot changes, real-time behavior, analytics or logs.</p>
+      <div class="screenshot-placeholder">
+        <p>Loading images from <code>/assets/screenshots/backend</code> ...</p>
+      </div>
+    </section>
+
+    <section class="screenshot-section">
+      <h3>How to Add Screenshots</h3>
+      <p>Replace any placeholder box with an image tag like:</p>
+      <pre>
+&lt;img src="assets/screenshots/your-image.png" style="width:100%;border-radius:10px;" /&gt;
+      </pre>
+      <p>Or host the images in your GitHub repo (recommended for GitHub Pages). Place all images under:</p>
+      <code>/assets/screenshots/</code>
+    </section>
+
+  </main>
+  <script src="../scripts/theme-toggle.js"></script>
+  <script src="../scripts/screenshots-loader.js"></script>
+</body>
+</html>

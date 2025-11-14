@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Update Template – M3M3 Development</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="logo-area">
+  <img src="../assets/logo/black-white.svg" alt="Company Logo" class="logo" />
+      <h1>M3M3</h1>
+    </div>
+    <nav style="display:flex;align-items:center;gap:1rem;">
+      <div>
+        <a href="future_updates.html">Home</a>
+        <span> | </span>
+        <a href="release_notes_page.html">Release Notes</a>
+        <span> | </span>
+  <a href="screenshots_page.html">Screenshots</a>
+  <span> | </span>
+        <a href="admin_updates.html">Admin</a>
+      </div>
+      <label class="theme-switch" style="margin-left:auto;" title="Toggle theme">
+        <input type="checkbox" class="theme-toggle-checkbox" aria-label="Toggle theme" />
+        <span class="theme-slider" role="switch" aria-checked="false"></span>
+      </label>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Client Project Update Template</h2>
+    <p>Use this template as the base for any new client project reporting site. Replace content sections as needed.</p>
+
+    <section>
+      <h3>Executive Summary</h3>
+      <p>[Insert summary for the client here]</p>
+    </section>
+
+    <section>
+      <h3>Highlights Delivered</h3>
+      <ul id="highlights-list">
+        <li>[Key highlight or deliverable]</li>
+        <li>[Another deliverable]</li>
+        <li>[Performance improvements, feature additions, etc.]</li>
+      </ul>
+      <button id="add-highlight-btn">Add Highlight</button>
+    </section>
+
+    <section>
+      <h3>What’s In Progress / What’s Next</h3>
+      <ul id="next-list">
+        <li>[Upcoming feature]</li>
+        <li>[Next area of focus]</li>
+        <li>[Dependencies or conditions]</li>
+      </ul>
+      <button id="add-next-btn">Add Item</button>
+    </section>
+
+    <section>
+      <h3>Risks & Assumptions</h3>
+      <ul id="risks-list">
+        <li>[Risk or dependency]</li>
+        <li>[Assumption]</li>
+      </ul>
+      <button id="add-risk-btn">Add Risk</button>
+    </section>
+
+    <section>
+      <h3>Appendix / Internal Notes</h3>
+      <p>[Internal notes, repositories used, stack, tasks, optional]</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© M3M3 Development – Project Update Template</p>
+  </footer>
+
+  <script src="../scripts/theme-toggle.js"></script>
+
+  <script>
+    function addItem(listId, placeholderText) {
+      const list = document.getElementById(listId);
+      const li = document.createElement('li');
+      li.textContent = placeholderText;
+      list.appendChild(li);
+    }
+
+    document.getElementById('add-highlight-btn').addEventListener('click', () => {
+      const item = prompt('Enter new highlight:');
+      if(item) addItem('highlights-list', item);
+    });
+
+    document.getElementById('add-next-btn').addEventListener('click', () => {
+      const item = prompt('Enter next task or feature:');
+      if(item) addItem('next-list', item);
+    });
+
+    document.getElementById('add-risk-btn').addEventListener('click', () => {
+      const item = prompt('Enter risk or assumption:');
+      if(item) addItem('risks-list', item);
+    });
+  </script>
+</body>
+</html>
