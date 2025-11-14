@@ -1,6 +1,14 @@
 
 # project-updates/
 
+## Publishing with GitHub Pages
+
+- Check out the repository
+- Install Node/npm dependencies
+- Run `npm run generate-manifests` to refresh screenshot manifests
+- Upload the repo as a Pages artifact and publish
+
+You can change the branch under `on.push.branches` if you prefer a different branch. Your current default is `origin` so the workflow shows `branches: [ origin ]`.
 │
 ├── index.html                 # Home page
 ├── release-notes.html         # Release notes page
@@ -19,7 +27,6 @@
 └── README.md                  # Optional project documentation
 
 Notes:
-
 - Screenshots: `assets/screenshots/frontend` and `assets/screenshots/backend` now support a `list.json` manifest describing files. The site will use `scripts/screenshots-loader.js` to load all images listed into the `Screenshots` page.
 
 - To regenerate manifests after adding/removing screenshots, run:
