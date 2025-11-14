@@ -11,6 +11,15 @@
 You can change the branch under `on.push.branches` if you prefer a different branch. Your current default is `origin` so the workflow shows `branches: [ origin ]`.
 
 Once the action runs, it will publish the site using the `gh-pages` branch. In your repository Settings → Pages, make sure the source is set to "Branch: gh-pages" (root) if you want a consistent Pages domain. The workflow will create the `gh-pages` branch when it first runs if it doesn't already exist.
+
+Troubleshooting deploy failures
+
+- If the workflow fails with '/usr/bin/git failed with exit code 128' that usually means the workflow couldn't push to the `gh-pages` branch (non-fast-forward or permission problem).
+  - Check Actions logs (Actions → Build and deploy to GitHub Pages) and open the failing step output to learn the exact reason.
+  - Ensure the workflow has permissions:
+    - The workflow sets `permissions: contents: write` so it can push to branches — if you changed that, update it.
+    - Ensure the repository is not blocking Actions from pushing to protected branches. For a protected branch, the action won't be able to push without appropriate bypass rules.
+  - The publish action is configured with `force: true` to force pushes to `gh-pages` (useful when the branch history diverges). This is safe for published artifacts but beware if you have custom content in `gh-pages`.
 │
 ├── index.html                 # Home page
 ├── release-notes.html         # Release notes page
