@@ -82,26 +82,30 @@
   }
 
   async function fetchPublishedPosts() {
-    // Try a few likely relative paths so the same script works from
-    // both the repo root (`index.html`) and the `pages/` folder
-    const candidates = [
-      'posts/index.json',    // when page is at repo root
-      '../posts/index.json', // when page is inside pages/
-      '/posts/index.json',   // absolute to site root (may or may not work depending on hosting)
-    ];
-
-    for (const p of candidates) {
-      try {
-        const res = await fetch(p);
-        if (res && res.ok) {
-          return await res.json();
-        }
-      } catch (e) {
-        // ignore and try next candidate
-      }
+    // Build an absolute path to posts/index.json that works regardless of
+    // whether this page is at the repo root or in pages/ subfolder.
+    // For GitHub Pages at /owner/repo/, we extract the base path dynamically.
+    const pathSegments = window.location.pathname.split('/').filter(s => s);
+    
+    // Detect if we're in a GitHub Pages-style deployment (e.g., /project-Updtaes/)
+    // by checking if the first segment doesn't end in .html and isn't a common static folder
+    let basePath = '/';
+    if (pathSegments.length > 0 && !pathSegments[0].includes('.')) {
+      // Likely GitHub Pages: /project-Updtaes/index.html or /project-Updtaes/pages/...
+      basePath = '/' + pathSegments[0] + '/';
     }
-
-    console.error('Failed to load published posts from any known path');
+    
+    const postsUrl = basePath + 'posts/index.json';
+    
+    try {
+      const res = await fetch(postsUrl);
+      if (res && res.ok) {
+        return await res.json();
+      }
+    } catch (e) {
+      console.error('Failed to load published posts from:', postsUrl, e);
+    }
+    
     return [];
   }
 
