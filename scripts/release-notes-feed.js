@@ -134,10 +134,15 @@
     // For GitHub Pages at /owner/repo/, we extract the base path dynamically.
     const pathSegments = window.location.pathname.split('/').filter(s => s);
     
+    // Known project folders that should NOT be treated as repo name prefix
+    const knownFolders = ['pages', 'assets', 'scripts', 'css', 'posts', 'config'];
+    
     // Detect if we're in a GitHub Pages-style deployment (e.g., /project-Updtaes/)
-    // by checking if the first segment doesn't end in .html and isn't a common static folder
+    // by checking if the first segment is NOT a known folder and doesn't include a dot
     let basePath = '/';
-    if (pathSegments.length > 0 && !pathSegments[0].includes('.')) {
+    if (pathSegments.length > 0 && 
+        !pathSegments[0].includes('.') && 
+        !knownFolders.includes(pathSegments[0].toLowerCase())) {
       // Likely GitHub Pages: /project-Updtaes/index.html or /project-Updtaes/pages/...
       basePath = '/' + pathSegments[0] + '/';
     }
