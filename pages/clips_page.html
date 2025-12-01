@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M3M3 Development – Video Clips</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <header>
+    <div style="display:flex;align-items:center;">
+      <img src="../assets/logo/black-white.svg" alt="Company Logo" class="logo" />
+      <h1>M3M3 Development – Video Clips</h1>
+    </div>
+    <nav style="margin-top:1rem;display:flex;align-items:center;gap:1rem;">
+      <div>
+        <a href="index.html">Home</a>
+        <span> | </span>
+        <a href="release_notes_page.html">Release Notes</a>
+        <span> | </span>
+        <a href="screenshots_page.html">Screenshots</a>
+        <span> | </span>
+        <a href="clips_page.html">Clips</a>
+        <span> | </span>
+        <a href="admin_updates.html">Admin</a>
+      </div>
+      <label class="theme-switch" style="margin-left:auto;" title="Toggle theme">
+        <input type="checkbox" class="theme-toggle-checkbox" aria-label="Toggle theme" />
+        <span class="theme-slider" role="switch" aria-checked="false"></span>
+      </label>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section>
+      <h2>Video Clips</h2>
+      <p>Demo videos and screen recordings organized by Frontend (Mobile App) and Backend (Admin Panel).</p>
+    </section>
+
+    <section class="clips-section" id="frontend-clips">
+      <div class="clips-section-header">
+        <h3>📱 Frontend (Mobile App) <span class="clips-count">Loading...</span></h3>
+        <span class="clips-toggle">▼</span>
+      </div>
+      <div class="clips-content">
+        <p style="font-size:0.85rem;color:var(--color-text-subtle);margin-bottom:0.5rem;">Demo videos showing the mobile app experience.</p>
+        <div class="clips-grid" id="frontend-clips-grid"></div>
+      </div>
+    </section>
+
+    <section class="clips-section" id="backend-clips">
+      <div class="clips-section-header">
+        <h3>🖥️ Admin Panel (Web) <span class="clips-count">Loading...</span></h3>
+        <span class="clips-toggle">▼</span>
+      </div>
+      <div class="clips-content">
+        <p style="font-size:0.85rem;color:var(--color-text-subtle);margin-bottom:0.5rem;">Demo videos showing the admin panel features.</p>
+        <div class="clips-grid" id="backend-clips-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../scripts/theme-toggle.js"></script>
+  <script src="../scripts/clips-loader.js"></script>
+</body>
+</html>

@@ -1,6 +1,53 @@
 (function() {
   const STORAGE_KEY = 'm3m3-admin-updates-v1';
 
+  // Extract YouTube video ID from various URL formats
+  function getYouTubeId(url) {
+    if (!url) return null;
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+      /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/
+    ];
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match) return match[1];
+    }
+    return null;
+  }
+
+  // Extract Vimeo video ID
+  function getVimeoId(url) {
+    if (!url) return null;
+    const match = url.match(/vimeo\.com\/(\d+)/);
+    return match ? match[1] : null;
+  }
+
+  // Create video embed HTML
+  function createVideoEmbed(url) {
+    const youtubeId = getYouTubeId(url);
+    if (youtubeId) {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${youtubeId}`;
+      iframe.className = 'video-embed';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowfullscreen', 'true');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+      return iframe;
+    }
+    
+    const vimeoId = getVimeoId(url);
+    if (vimeoId) {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://player.vimeo.com/video/${vimeoId}`;
+      iframe.className = 'video-embed';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowfullscreen', 'true');
+      return iframe;
+    }
+    
+    return null;
+  }
+
   function loadUpdates() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -33,6 +80,17 @@
 
     card.appendChild(heading);
     card.appendChild(meta);
+
+    // Video embed (show before images)
+    if (update.videoUrl) {
+      const videoContainer = document.createElement('div');
+      videoContainer.className = 'video-container';
+      const videoEmbed = createVideoEmbed(update.videoUrl);
+      if (videoEmbed) {
+        videoContainer.appendChild(videoEmbed);
+        card.appendChild(videoContainer);
+      }
+    }
 
     if (update.imageUrls && update.imageUrls.length) {
       const imgsContainer = document.createElement('div');

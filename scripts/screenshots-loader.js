@@ -2,29 +2,64 @@
   // Load screenshots from a manifest JSON. The script expects JSON files located at:
   // ../assets/screenshots/frontend/list.json and ../assets/screenshots/backend/list.json
 
-  function renderGrid(container, images, basePath) {
+  const INITIAL_SHOW_COUNT = 8; // Number of thumbnails to show initially
+
+  function renderGrid(container, images, basePath, sectionEl) {
     if (!container) return;
     container.innerHTML = '';
+    
+    // Update the count badge
+    const countBadge = sectionEl?.querySelector('.screenshot-count');
+    if (countBadge) {
+      countBadge.textContent = images.length + ' images';
+    }
+    
     const grid = document.createElement('div');
     grid.className = 'screenshot-grid';
+    
+    const showInitial = images.length > INITIAL_SHOW_COUNT;
+    const initialImages = showInitial ? images.slice(0, INITIAL_SHOW_COUNT) : images;
+    const hiddenImages = showInitial ? images.slice(INITIAL_SHOW_COUNT) : [];
 
-  images.forEach((filename, index) => {
-      const card = document.createElement('div');
-      card.className = 'screenshot-card';
-      const img = document.createElement('img');
-  img.src = basePath + '/' + encodeURIComponent(filename).replace(/%2F/g, '/');
-      img.alt = filename;
-      img.loading = 'lazy';
-  img.dataset.index = index;
-  img.dataset.filename = filename;
-  img.dataset.base = basePath;
-  img.style.cursor = 'zoom-in';
-  img.addEventListener('click', () => openLightbox(images, index, basePath));
-      card.appendChild(img);
+    // Render initial images
+    initialImages.forEach((filename, index) => {
+      const card = createImageCard(filename, index, images, basePath);
       grid.appendChild(card);
     });
 
     container.appendChild(grid);
+    
+    // Add "Show more" button if there are hidden images
+    if (hiddenImages.length > 0) {
+      const showMoreBtn = document.createElement('button');
+      showMoreBtn.className = 'screenshot-show-more';
+      showMoreBtn.textContent = `Show ${hiddenImages.length} more screenshots`;
+      showMoreBtn.addEventListener('click', () => {
+        // Add remaining images
+        hiddenImages.forEach((filename, i) => {
+          const card = createImageCard(filename, INITIAL_SHOW_COUNT + i, images, basePath);
+          grid.appendChild(card);
+        });
+        showMoreBtn.remove();
+      });
+      container.appendChild(showMoreBtn);
+    }
+  }
+  
+  function createImageCard(filename, index, allImages, basePath) {
+    const card = document.createElement('div');
+    card.className = 'screenshot-card';
+    const img = document.createElement('img');
+    img.src = basePath + '/' + encodeURIComponent(filename).replace(/%2F/g, '/');
+    img.alt = filename;
+    img.loading = 'lazy';
+    img.dataset.index = index;
+    img.dataset.filename = filename;
+    img.dataset.base = basePath;
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', () => openLightbox(allImages, index, basePath));
+    card.appendChild(img);
+    return card;
   }
 
   function tryLoadList(manifestPath) {
@@ -34,34 +69,50 @@
     });
   }
 
+  function setupCollapsibleSection(sectionEl) {
+    const header = sectionEl.querySelector('.screenshot-section-header');
+    if (!header) return;
+    
+    header.addEventListener('click', () => {
+      sectionEl.classList.toggle('collapsed');
+    });
+  }
+
   function init() {
     // This is run from /pages/* so assets path should be ../assets/... accordingly
-    const frontendContainer = document.querySelector('#frontend .screenshot-placeholder');
-    const backendContainer = document.querySelector('#admin-panel .screenshot-placeholder');
+    const frontendSection = document.querySelector('#frontend');
+    const backendSection = document.querySelector('#admin-panel');
+    
+    // Setup collapsible behavior
+    if (frontendSection) setupCollapsibleSection(frontendSection);
+    if (backendSection) setupCollapsibleSection(backendSection);
+    
+    const frontendContainer = document.querySelector('#frontend .screenshot-content');
+    const backendContainer = document.querySelector('#admin-panel .screenshot-content');
 
-  if (frontendContainer) {
-      const dir = frontendContainer.parentElement?.dataset?.dir || 'frontend';
+    if (frontendContainer && frontendSection) {
+      const dir = frontendSection.dataset?.dir || 'frontend';
       const manifest = `../assets/screenshots/${dir}/list.json`;
       const base = `../assets/screenshots/${dir}`;
       tryLoadList(manifest)
         .then(images => {
           // Filter out anything that isn't an image and ignore manifest file names
           const allowed = images.filter(name => /\.(png|jpe?g|gif|webp|svg)$/i.test(name));
-          renderGrid(frontendContainer, allowed, base);
+          renderGrid(frontendContainer, allowed, base, frontendSection);
         })
         .catch(() => { // fallback: keep placeholders
           frontendContainer.innerHTML = '<p>No screenshot manifest found for ' + dir + '.</p>';
         });
     }
 
-  if (backendContainer) {
-      const dir = backendContainer.parentElement?.dataset?.dir || 'backend';
+    if (backendContainer && backendSection) {
+      const dir = backendSection.dataset?.dir || 'backend';
       const manifest = `../assets/screenshots/${dir}/list.json`;
       const base = `../assets/screenshots/${dir}`;
       tryLoadList(manifest)
         .then(images => {
           const allowed = images.filter(name => /\.(png|jpe?g|gif|webp|svg)$/i.test(name));
-          renderGrid(backendContainer, allowed, base);
+          renderGrid(backendContainer, allowed, base, backendSection);
         })
         .catch(() => {
           backendContainer.innerHTML = '<p>No screenshot manifest found for ' + dir + '.</p>';

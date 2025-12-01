@@ -20,6 +20,8 @@
         <span> | </span>
   <a href="screenshots_page.html">Screenshots</a>
   <span> | </span>
+  <a href="clips_page.html">Clips</a>
+  <span> | </span>
         <a href="admin_updates.html">Admin</a>
       </div>
       <label class="theme-switch" style="margin-left:auto;" title="Toggle theme">
@@ -69,6 +71,25 @@
           </div>
         </div>
 
+        <div style="margin-bottom:1rem;">
+          <label for="update-video-url"><strong>🎬 Video URL (optional)</strong></label><br />
+          <input id="update-video-url" name="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..." style="width:100%;padding:0.5rem;margin-top:0.25rem;border-radius:6px;border:1px solid #d1d5db;" />
+          <p style="font-size:0.8rem;color:#6b7280;margin-top:0.25rem;">Paste a YouTube or Vimeo link. Use <strong>Unlisted</strong> privacy for videos only your clients should see.</p>
+          <div id="update-video-preview" style="margin-top:0.5rem;display:none;">
+            <div id="video-preview-container"></div>
+            <button type="button" id="clear-video-btn" style="background:#ef4444;margin-top:0.5rem;">Remove video</button>
+          </div>
+        </div>
+
+        <div id="video-clips-section-wrapper" style="margin-bottom:1rem;display:none;">
+          <label for="update-video-clips-section"><strong>Add to Clips Section</strong></label><br />
+          <select id="update-video-clips-section" style="width:100%;padding:0.5rem;margin-top:0.25rem;border-radius:6px;border:1px solid #d1d5db;background:var(--color-surface);color:var(--color-text-main);">
+            <option value="frontend">📱 Frontend (Mobile App)</option>
+            <option value="backend">🖥️ Admin Panel (Web)</option>
+          </select>
+          <p style="font-size:0.8rem;color:#6b7280;margin-top:0.25rem;">Video will also be added to the Clips page under this section.</p>
+        </div>
+
         <button type="submit">Save update</button>
         <button type="button" id="clear-updates-btn" style="background-color:#6b7280;margin-left:0.5rem;">Clear all (this browser)</button>
       </form>
@@ -81,6 +102,71 @@
       </div>
       <div id="admin-updates-feed" class="update-grid"></div>
     </section>
+
+    <!-- Clips Management Section -->
+    <section style="margin-top:2rem;">
+      <div class="section-header">
+        <h2>🎬 Manage Video Clips</h2>
+        <p>Add demo videos to the Clips page. Organized by Frontend and Backend.</p>
+      </div>
+    </section>
+
+    <section class="update-card">
+      <h3>➕ Add a New Clip</h3>
+      <p style="margin-bottom:1rem;color:var(--color-text-subtle);">Add a video to the Frontend or Backend section of the Clips page.</p>
+      
+      <form id="add-clip-form">
+        <div style="margin-bottom:1rem;">
+          <label for="clip-section"><strong>Section</strong></label><br />
+          <select id="clip-section" style="width:100%;padding:0.5rem;margin-top:0.25rem;border-radius:6px;border:1px solid #d1d5db;background:var(--color-surface);color:var(--color-text-main);">
+            <option value="frontend">📱 Frontend (Mobile App)</option>
+            <option value="backend">🖥️ Admin Panel (Web)</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label for="clip-title"><strong>Title / Description</strong></label><br />
+          <input id="clip-title" type="text" required placeholder="e.g., Cart animation demo" style="width:100%;padding:0.5rem;margin-top:0.25rem;border-radius:6px;border:1px solid #d1d5db;" />
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label for="clip-url"><strong>🎬 Video URL</strong></label><br />
+          <input id="clip-url" type="url" required placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..." style="width:100%;padding:0.5rem;margin-top:0.25rem;border-radius:6px;border:1px solid #d1d5db;" />
+          <p style="font-size:0.8rem;color:#6b7280;margin-top:0.25rem;">Paste a YouTube (unlisted) or Vimeo link.</p>
+        </div>
+
+        <div id="clip-preview" style="margin-bottom:1rem;display:none;">
+          <label><strong>Preview</strong></label>
+          <div id="clip-preview-container" style="margin-top:0.5rem;"></div>
+        </div>
+
+        <button type="submit">Add Clip</button>
+        <button type="button" id="export-clips-btn" style="background:#3b82f6;margin-left:0.5rem;">Export Clips JSON</button>
+      </form>
+    </section>
+
+    <section class="update-card" style="margin-top:1rem;">
+      <h3>📥 Import Clips</h3>
+      <p style="margin-bottom:1rem;color:var(--color-text-subtle);">Import clips from a JSON file (useful when setting up on a new device).</p>
+      <input type="file" id="import-clips-file" accept=".json" />
+    </section>
+
+    <section style="margin-top:1rem;">
+      <div class="section-header">
+        <h2>Current Clips</h2>
+        <p>Manage existing clips. Changes appear on the Clips page.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;">
+        <div>
+          <h4 style="margin-bottom:0.5rem;">📱 Frontend Clips</h4>
+          <div id="admin-frontend-clips" class="admin-clips-list"></div>
+        </div>
+        <div>
+          <h4 style="margin-bottom:0.5rem;">🖥️ Backend Clips</h4>
+          <div id="admin-backend-clips" class="admin-clips-list"></div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -90,5 +176,6 @@
   <script src="../scripts/theme-toggle.js"></script>
   <script src="../scripts/admin-auth.js"></script>
   <script src="../scripts/admin-updates.js"></script>
+  <script src="../scripts/clips-loader.js"></script>
 </body>
 </html>

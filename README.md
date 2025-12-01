@@ -105,11 +105,12 @@ Each post is a JSON file with this structure:
   "createdAt": "2025-11-14T12:00:00.000Z",
   "displayDate": "2025-11-14",
   "displayTime": "12:00",
-  "imageUrls": ["data:image/png;base64,..."]
+  "imageUrls": ["data:image/png;base64,..."],
+  "videoUrl": "https://www.youtube.com/watch?v=..."
 }
 ```
 
-Images are stored as base64 data URLs within the JSON file, making posts completely self-contained.
+Images are stored as base64 data URLs within the JSON file, making posts completely self-contained. Videos are embedded via YouTube or Vimeo URLs.
 
 ### Scripts
 - `npm run generate-posts` - Regenerate `posts/index.json` from individual post files
@@ -140,12 +141,22 @@ Images are stored as base64 data URLs within the JSON file, making posts complet
   - Admin updates and release notes
     - Admin UI for posting updates: `pages/admin_updates.html` and `scripts/admin-updates.js`.
     - Posts are stored as JSON files in the `posts/` folder. Each post is downloaded after creation and committed to the repository.
-    - Admin posts include: title, body, a generated timestamp (local time), and optionally multiple images per post (stored as base64 data URLs).
+    - Admin posts include: title, body, a generated timestamp (local time), optionally multiple images per post (stored as base64 data URLs), and optionally a video URL (YouTube or Vimeo).
+    - **Video embeds**: When adding a post, you can include a YouTube or Vimeo link. Use **Unlisted** privacy for videos only your clients should see. The video will be embedded in the post on Release Notes and Home pages.
+    - **Auto-add to Clips**: When you add a video URL to a post, a dropdown appears to select "Frontend" or "Backend" section. The video is automatically added to the Clips page under that section.
     - Posts are also cached in localStorage under the key `m3m3-admin-updates-v1` for quick local access.
     - Admin authentication is handled by a light client-side gate using `config/auth-config.json` and `scripts/admin-auth.js`; the auth flag is stored at `m3m3-admin-auth`.
     - Release notes page (`pages/release_notes_page.html`) loads posts from `posts/index.json` via `scripts/release-notes-feed.js` and shows newest-first.
     - Home (`pages/index.html`) shows the latest post with `scripts/home-latest-update.js`.
     - Use `npm run generate-posts` to regenerate `posts/index.json` after adding new post files.
+
+  - Video Clips page
+    - Dedicated clips gallery at `pages/clips_page.html` displays video demos organized by Frontend (Mobile App) and Backend (Admin Panel) sections.
+    - Clips are stored in localStorage under the key `m3m3-clips-v1` and can be managed from the Admin page.
+    - **Adding clips**: Use the "Add a New Clip" form on the Admin page, or add a video URL to a post (auto-adds to clips).
+    - **Managing clips**: Edit or delete clips from the Admin page under "Manage Video Clips" section.
+    - **Import/Export**: Use "Export Clips JSON" to backup clips data, or "Import Clips JSON" to restore from a backup file.
+    - The Clips page is view-only for clients; all management is done through the Admin page.
 
   - Screenshots loader and lightbox viewer
     - The screenshots page now dynamically loads images per section from manifests located at `assets/screenshots/<folder>/list.json`.
