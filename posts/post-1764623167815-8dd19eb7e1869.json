@@ -1,0 +1,10 @@
+{
+  "id": "1764623167815-8dd19eb7e1869",
+  "title": "📱 Mobile App Updates Part 2",
+  "body": "🏠 Home Page - Quick Access Section\nAdmin-Controlled Categories:\n\nThe Quick Access section on the home page is now fully controlled from the admin panel\nCategories you mark as \"Quick Access\" will automatically appear here\nDisplay order matches the order you set in the admin panel\nChanges sync in real-time—no app restart needed\n📍 Multi-Location Support (NEW!)\nProducts can now be assigned to multiple store locations, and the app handles this intelligently:\n\nLocation Display on Product Details:\n\nOnline Only - If a product has no physical store locations, a blue \"Online Only\" tag is displayed\nSingle Location - If available at one store, the location name is shown\nMultiple Locations - If available at multiple stores, users see a dropdown to select their preferred pickup location\nThis prepares the app for future features like location-based inventory and store pickup options.\n\n📂 Category Pages - Image Support\nCustom Category Images:\n\nCategory pages now display the custom images uploaded through the admin panel\nSupports both standard images and base64 encoded images\nImages load smoothly with caching to prevent flickering\n⚡ Performance & Stability\nReal-Time Updates:\n\nThe app now receives live updates when inventory or categories change\nNo need to pull-to-refresh—new products and category changes appear automatically\nImage Performance:\n\nAdded image caching to prevent repeated loading\nSmooth transitions when images load (no more flickering)\n\nNote: All data in the videos are test data for testing pure functionality\nPlease review the release notes section to see the part 1 post.",
+  "createdAt": "2025-12-01T21:06:07.815Z",
+  "displayDate": "2025-12-01",
+  "displayTime": "15:06",
+  "imageUrls": [],
+  "videoUrl": "https://youtu.be/h--4T0geg5U"
+}

@@ -1,5 +1,6 @@
 (function() {
   const STORAGE_KEY = 'm3m3-admin-updates-v1';
+  const CLIPS_STORAGE_KEY = 'm3m3-clips-v1';
 
   /**
   * Update shape:
@@ -10,9 +11,104 @@
   *   createdAt: string (ISO),
   *   displayDate: string,
   *   displayTime: string,
-  *   imageUrls?: string[] // array of data URLs
+  *   imageUrls?: string[], // array of data URLs
+  *   videoUrl?: string     // YouTube or Vimeo URL
   * }
    */
+
+  // Load clips from localStorage
+  function loadClips() {
+    try {
+      const raw = localStorage.getItem(CLIPS_STORAGE_KEY);
+      if (!raw) return { frontend: [], backend: [] };
+      const parsed = JSON.parse(raw);
+      return {
+        frontend: Array.isArray(parsed.frontend) ? parsed.frontend : [],
+        backend: Array.isArray(parsed.backend) ? parsed.backend : []
+      };
+    } catch (e) {
+      return { frontend: [], backend: [] };
+    }
+  }
+
+  // Save clips to localStorage
+  function saveClips(clips) {
+    try {
+      localStorage.setItem(CLIPS_STORAGE_KEY, JSON.stringify(clips));
+    } catch (e) {
+      console.error('Failed to save clips', e);
+    }
+  }
+
+  // Add a video to the clips section (defaults to frontend)
+  function addVideoToClips(videoUrl, title, addedAt, section = 'frontend') {
+    const clips = loadClips();
+    
+    // Check if this URL already exists in either section
+    const allUrls = [...clips.frontend, ...clips.backend].map(c => c.url);
+    if (allUrls.includes(videoUrl)) {
+      console.log('Video already exists in clips');
+      return;
+    }
+
+    const newClip = {
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      title: title || 'Untitled Clip',
+      url: videoUrl,
+      addedAt: addedAt
+    };
+
+    clips[section].unshift(newClip);
+    saveClips(clips);
+    console.log('Video added to clips:', section);
+  }
+
+  // Extract YouTube video ID from various URL formats
+  function getYouTubeId(url) {
+    if (!url) return null;
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+      /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/
+    ];
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match) return match[1];
+    }
+    return null;
+  }
+
+  // Extract Vimeo video ID
+  function getVimeoId(url) {
+    if (!url) return null;
+    const match = url.match(/vimeo\.com\/(\d+)/);
+    return match ? match[1] : null;
+  }
+
+  // Create video embed HTML
+  function createVideoEmbed(url) {
+    const youtubeId = getYouTubeId(url);
+    if (youtubeId) {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${youtubeId}`;
+      iframe.className = 'video-embed';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowfullscreen', 'true');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+      return iframe;
+    }
+    
+    const vimeoId = getVimeoId(url);
+    if (vimeoId) {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://player.vimeo.com/video/${vimeoId}`;
+      iframe.className = 'video-embed';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowfullscreen', 'true');
+      return iframe;
+    }
+    
+    return null;
+  }
 
   function loadUpdates() {
     try {
@@ -82,6 +178,17 @@
 
         card.appendChild(heading);
         card.appendChild(meta);
+
+        // Video embed (show before images)
+        if (update.videoUrl) {
+          const videoContainer = document.createElement('div');
+          videoContainer.className = 'video-container';
+          const videoEmbed = createVideoEmbed(update.videoUrl);
+          if (videoEmbed) {
+            videoContainer.appendChild(videoEmbed);
+            card.appendChild(videoContainer);
+          }
+        }
 
         if (update.imageUrls && update.imageUrls.length) {
           const imgsContainer = document.createElement('div');
@@ -229,12 +336,53 @@
       });
     }
 
+    // Video URL preview handling
+    const videoInput = document.getElementById('update-video-url');
+    const videoPreviewContainer = document.getElementById('update-video-preview');
+    const videoPreviewInner = document.getElementById('video-preview-container');
+    const clearVideoBtn = document.getElementById('clear-video-btn');
+    const clipsSectionWrapper = document.getElementById('video-clips-section-wrapper');
+
+    if (videoInput) {
+      videoInput.addEventListener('input', function() {
+        const url = videoInput.value.trim();
+        if (videoPreviewInner) videoPreviewInner.innerHTML = '';
+        if (!url) {
+          if (videoPreviewContainer) videoPreviewContainer.style.display = 'none';
+          if (clipsSectionWrapper) clipsSectionWrapper.style.display = 'none';
+          return;
+        }
+        const embed = createVideoEmbed(url);
+        if (embed && videoPreviewInner) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'video-container';
+          wrapper.appendChild(embed);
+          videoPreviewInner.appendChild(wrapper);
+          videoPreviewContainer.style.display = 'block';
+          if (clipsSectionWrapper) clipsSectionWrapper.style.display = 'block';
+        } else {
+          if (videoPreviewContainer) videoPreviewContainer.style.display = 'none';
+          if (clipsSectionWrapper) clipsSectionWrapper.style.display = 'none';
+        }
+      });
+    }
+
+    if (clearVideoBtn) {
+      clearVideoBtn.addEventListener('click', function() {
+        if (videoInput) videoInput.value = '';
+        if (videoPreviewInner) videoPreviewInner.innerHTML = '';
+        if (videoPreviewContainer) videoPreviewContainer.style.display = 'none';
+        if (clipsSectionWrapper) clipsSectionWrapper.style.display = 'none';
+      });
+    }
+
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
 
       const title = document.getElementById('update-title').value.trim();
       const body = document.getElementById('update-body').value.trim();
       const imageUrl = document.getElementById('update-image-url').value.trim();
+      const videoUrl = document.getElementById('update-video-url')?.value.trim() || '';
       
       const finalImageUrls = filePreviewDataUrls.length ? filePreviewDataUrls.slice() : [];
       if (imageUrl) finalImageUrls.push(imageUrl);
@@ -256,13 +404,20 @@
         createdAt: now.toISOString(),
         displayDate,
         displayTime,
-        imageUrls: finalImageUrls
+        imageUrls: finalImageUrls,
+        videoUrl: videoUrl || undefined
       };
 
       // Save locally
       UPDATES.push(update);
       saveUpdates(UPDATES);
       renderUpdates(feed, UPDATES);
+
+      // If there's a video URL, also add it to the Clips section
+      if (videoUrl) {
+        const selectedSection = document.getElementById('update-video-clips-section')?.value || 'frontend';
+        addVideoToClips(videoUrl, title, displayDate, selectedSection);
+      }
 
       // Auto-download the JSON file for the user to commit
       downloadPostAsJSON(update);
@@ -283,6 +438,9 @@
       setTimeout(() => hint.remove(), 10000);
 
       if (previewContainer) previewContainer.style.display = 'none';
+      if (videoPreviewContainer) videoPreviewContainer.style.display = 'none';
+      if (videoPreviewInner) videoPreviewInner.innerHTML = '';
+      if (clipsSectionWrapper) clipsSectionWrapper.style.display = 'none';
       form.reset();
       filePreviewDataUrls = [];
     });
